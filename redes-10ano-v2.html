@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redes — 10º Ano</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f1e;
+  --card: #111827;
+  --card2: #1a2235;
+  --border: #1e2d45;
+  --blue: #3b82f6;
+  --cyan: #06b6d4;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --bright: #f8fafc;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* animated bg */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 10%, rgba(59,130,246,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(6,182,212,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  width: 100%;
+  max-width: 760px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 32px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-dot {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.logo-name {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--bright);
+  letter-spacing: -0.3px;
+}
+.logo-name span { color: var(--cyan); }
+
+.progress-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 6px 14px;
+}
+
+.pill-steps {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.pill-bar {
+  width: 80px; height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.pill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── SCREENS ── */
+.screen { display: none; flex-direction: column; gap: 20px; animation: up 0.4s ease; }
+.screen.active { display: flex; }
+@keyframes up {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── GUIDE BUBBLE ── */
+.guide-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+}
+
+.guide-avatar {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1d4ed8, var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(59,130,246,0.3);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+.guide-bubble {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px 20px 20px 6px;
+  padding: 16px 20px;
+  font-size: 15px;
+  line-height: 1.7;
+  position: relative;
+}
+
+.guide-bubble .tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+
+.guide-bubble b { color: var(--bright); }
+.guide-bubble .hl { color: var(--amber); font-weight: 700; }
+.guide-bubble .bl { color: var(--blue); font-weight: 700; }
+.guide-bubble .gr { color: var(--green); font-weight: 700; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── CHOICES ── */
+.choices { display: flex; flex-direction: column; gap: 10px; }
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--card2);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.choice:hover { border-color: var(--blue); background: rgba(59,130,246,0.08); transform: translateX(4px); }
+
+.choice-letter {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.choice.ok  { border-color: var(--green); background: rgba(16,185,129,0.08); }
+.choice.ok .choice-letter { background: var(--green); color: #000; }
+.choice.bad { border-color: var(--red);   background: rgba(239,68,68,0.07); animation: shake 0.3s; }
+.choice.bad .choice-letter { background: var(--red); color: #fff; }
+.choice.dim { opacity: 0.35; pointer-events: none; }
+
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  75%{transform:translateX(6px)}
+}
+
+/* ── DIAGRAM ── */
+.diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+
+.dev {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.dev-box {
+  width: 70px; height: 60px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: var(--card2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  transition: all 0.4s ease;
+}
+.dev-box.lit  { border-color: var(--blue); box-shadow: 0 0 20px rgba(59,130,246,0.35); }
+.dev-box.done { border-color: var(--green); box-shadow: 0 0 20px rgba(16,185,129,0.3); }
+
+.dev-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+.dev-ip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--blue);
+  text-align: center;
+}
+
+.wire {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  margin: 0 -1px;
+  margin-bottom: 30px;
+  position: relative;
+  transition: all 0.5s ease;
+  min-width: 30px;
+}
+.wire.lit  { background: var(--blue); box-shadow: 0 0 10px rgba(59,130,246,0.5); }
+.wire.done { background: var(--green); box-shadow: 0 0 10px rgba(16,185,129,0.5); }
+
+/* packet dot */
+.pkt {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  top: -4px;
+  display: none;
+}
+
+/* ── IP PICKER ── */
+.ip-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ip-slot {
+  border-radius: 12px;
+  border: 1.5px dashed var(--border);
+  padding: 14px 16px;
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.3s;
+}
+.ip-slot .slot-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.ip-slot .slot-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+}
+.ip-slot.filled { border-style: solid; border-color: var(--green); }
+.ip-slot.filled .slot-val { color: var(--green); font-style: normal; }
+.ip-slot.wrong { border-color: var(--red); animation: shake 0.3s; }
+
+.ip-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ip-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1.5px solid var(--blue);
+  background: rgba(59,130,246,0.08);
+  color: var(--blue);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.ip-chip:hover { background: rgba(59,130,246,0.18); transform: translateY(-2px); }
+.ip-chip.used { opacity: 0.2; pointer-events: none; }
+
+/* selected device highlight */
+.dev-box.selected {
+  border-color: var(--amber);
+  box-shadow: 0 0 20px rgba(245,158,11,0.4);
+}
+
+/* ── BLANKS ── */
+.fill-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.fill-line:last-child { border-bottom: none; }
+
+.fill-blank {
+  display: inline-block;
+  min-width: 100px;
+  border: none;
+  border-bottom: 2px solid var(--blue);
+  background: rgba(59,130,246,0.07);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  padding: 2px 10px;
+  border-radius: 4px 4px 0 0;
+  outline: none;
+  text-align: center;
+  transition: all 0.2s;
+}
+.fill-blank:focus { background: rgba(59,130,246,0.14); border-bottom-color: var(--amber); color: var(--amber); }
+.fill-blank.ok  { border-bottom-color: var(--green); color: var(--green); background: rgba(16,185,129,0.08); }
+.fill-blank.err { border-bottom-color: var(--red);   color: var(--red); animation: shake 0.3s; }
+
+.kw  { color: #c084fc; }
+.fn  { color: var(--green); }
+.str { color: var(--amber); }
+.cm  { color: #334155; }
+
+/* ── FEEDBACK ── */
+.fb {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.fb.show { display: flex; animation: up 0.3s ease; }
+.fb.ok  { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; }
+.fb.bad { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);  color: #fca5a5; }
+.fb-icon { font-size: 18px; flex-shrink:0; margin-top:1px; }
+
+/* ── HINT ── */
+.hint-row { display: flex; align-items: center; gap: 10px; }
+.hint-toggle {
+  font-size: 12px;
+  color: var(--muted);
+  background: none; border: none; cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  display: flex; align-items: center; gap: 4px;
+  transition: color 0.2s;
+}
+.hint-toggle:hover { color: var(--amber); }
+.hint-box {
+  display: none;
+  padding: 10px 14px;
+  background: rgba(245,158,11,0.07);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 10px;
+  font-size: 13px;
+  color: #fcd34d;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.6;
+}
+.hint-box.show { display: block; }
+
+/* ── ACTION BUTTON ── */
+.action-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px;
+  background: rgba(59,130,246,0.12);
+  border: 1.5px solid rgba(59,130,246,0.35);
+  color: var(--blue);
+  border-radius: 10px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.action-btn:hover { background: rgba(59,130,246,0.22); }
+
+/* ── NAV ── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 4px;
+}
+
+.nav-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px;
+  background: none;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  border-radius: 10px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-back:hover { border-color: var(--blue); color: var(--text); }
+
+.nav-next {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+}
+.nav-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(59,130,246,0.45); }
+.nav-next:disabled { opacity: 0.3; pointer-events: none; box-shadow: none; }
+
+/* ── PING OUTPUT ── */
+.ping-output {
+  background: #000;
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  min-height: 50px;
+  display: none;
+}
+.ping-output.show { display: block; animation: up 0.3s ease; }
+.ping-ok { color: var(--green); }
+.ping-fail { color: var(--red); }
+.ping-info { color: #334155; }
+
+/* ── INPUT FIELD ── */
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: border-color 0.2s;
+}
+.input-wrap:focus-within { border-color: var(--blue); }
+.input-prefix {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--green);
+  flex-shrink: 0;
+}
+.input-field {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--cyan);
+}
+.input-field::placeholder { color: var(--muted); }
+
+/* ── FINAL ── */
+.final-glow {
+  text-align: center;
+  padding: 36px 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.final-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(59,130,246,0.15), transparent 70%);
+}
+.final-emoji { font-size: 64px; display: block; position: relative; animation: pop 0.5s ease; }
+@keyframes pop { 0%{transform:scale(0)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+.final-title {
+  font-size: 32px; font-weight: 900;
+  color: var(--bright);
+  margin: 12px 0 6px;
+  position: relative;
+}
+.final-title span { color: var(--cyan); }
+.final-sub { color: var(--muted); font-size: 14px; position: relative; }
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.summary-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.s-icon { font-size: 22px; }
+.s-title { font-size: 13px; font-weight: 700; color: var(--bright); }
+.s-desc  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-dot">🌐</div>
+      <div class="logo-name">Redes <span>10º ano</span></div>
+    </div>
+    <div class="progress-pill">
+      <span class="pill-steps" id="pill-txt">0 / 5</span>
+      <div class="pill-bar"><div class="pill-fill" id="prog" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       S0 · INTRO
+  ══════════════════════════ -->
+  <div class="screen active" id="s0">
+    <div class="guide-row">
+      <div class="guide-avatar">🤖</div>
+      <div class="guide-bubble">
+        <div class="tag">👋 Olá!</div>
+        Hoje vais aprender o básico das <b>redes de computadores</b>!<br><br>
+        Já alguma vez te perguntaste <span class="hl">como é que dois computadores se falam?</span> É exatamente isso que vamos descobrir, passo a passo. 🚀
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗺️ O que vais fazer</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤔</div>
+          <div style="font-size:14px;">Descobrir o que é uma rede</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📍</div>
+          <div style="font-size:14px;">Atribuir moradas (IPs) aos computadores</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📡</div>
+          <div style="font-size:14px;">Testar se os computadores se conseguem falar</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <div></div>
+      <button class="nav-next" onclick="goTo(1)">Vamos começar! →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       S1 · O QUE É UMA REDE
+  ══════════════════════════ -->
+  <div class="screen" id="s1">
+    <div class="guide-row">
+      <div class="guide-avatar">🤖</div>
+      <div class="guide-bubble">
+        <div class="tag">Passo 1 de 5</div>
+        Imagina que tens dois amigos em casas diferentes.<br>
+        Para se falarem, precisam de um <b>telefone e uma linha</b>.<br><br>
+        Numa rede de computadores é igual — os computadores precisam de estar <span class="hl">ligados</span> e ter uma <span class="bl">linguagem comum</span>!
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Seleciona a resposta certa</div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:14px;">O que é uma rede de computadores?</p>
+      <div class="choices" id="ch1">
+        <div class="choice" onclick="pick('ch1',this,false)">
+          <div class="choice-letter">A</div>
+          <span>Um programa para ver filmes</span>
+        </div>
+        <div class="choice" onclick="pick('ch1',this,true)">
+          <div class="choice-letter">B</div>
+          <span>Computadores ligados entre si para partilhar informação</span>
+        </div>
+        <div class="choice" onclick="pick('ch1',this,false)">
+          <div class="choice-letter">C</div>
+          <span>Um cabo que liga o rato ao computador</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="fb" id="fb1"></div>
+
+    <!-- diagram reveals after correct -->
+    <div class="card" id="diag1" style="display:none">
+      <div class="card-title">🔌 Assim funciona uma rede simples</div>
+      <div class="diagram">
+        <div class="dev">
+          <div class="dev-box lit">💻</div>
+          <div class="dev-name">PC-A</div>
+        </div>
+        <div class="wire lit"></div>
+        <div class="dev">
+          <div class="dev-box lit">🔀</div>
+          <div class="dev-name">Switch</div>
+          <div class="dev-ip">liga tudo</div>
+        </div>
+        <div class="wire lit"></div>
+        <div class="dev">
+          <div class="dev-box lit">💻</div>
+          <div class="dev-name">PC-B</div>
+        </div>
+      </div>
+      <p style="font-size:13px; color:var(--muted); text-align:center;">O <b style="color:var(--text)">Switch</b> é como uma tomada múltipla — liga vários computadores ao mesmo tempo!</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-back" onclick="goTo(0)">← Voltar</button>
+      <button class="nav-next" id="n1" onclick="goTo(2)" disabled>Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       S2 · ENDEREÇO IP
+  ══════════════════════════ -->
+  <div class="screen" id="s2">
+    <div class="guide-row">
+      <div class="guide-avatar">🤖</div>
+      <div class="guide-bubble">
+        <div class="tag">Passo 2 de 5</div>
+        Cada computador numa rede tem uma <b>morada única</b> — o <span class="hl">endereço IP</span>.<br><br>
+        É como o número da tua casa! Sem morada, ninguém sabe onde entregar a carta. 📬<br><br>
+        <span class="gr">Clica no computador e depois no IP que queres atribuir!</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏠 Atribui os IPs — clica num PC e escolhe o IP</div>
+
+      <!-- mini diagram with clickable devs -->
+      <div class="diagram" style="padding:16px 8px">
+        <div class="dev" id="dev-a" onclick="selectDev('a')" style="cursor:pointer">
+          <div class="dev-box" id="box-a">💻</div>
+          <div class="dev-name">PC-A</div>
+          <div class="dev-ip" id="ip-a">sem IP</div>
+        </div>
+        <div class="wire" id="w1"></div>
+        <div class="dev">
+          <div class="dev-box" style="border-color:var(--border)">🔀</div>
+          <div class="dev-name">Switch</div>
+        </div>
+        <div class="wire" id="w2"></div>
+        <div class="dev" id="dev-b" onclick="selectDev('b')" style="cursor:pointer">
+          <div class="dev-box" id="box-b">💻</div>
+          <div class="dev-name">PC-B</div>
+          <div class="dev-ip" id="ip-b">sem IP</div>
+        </div>
+      </div>
+
+      <div id="ip-select-hint" style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:12px">
+        👆 Clica num PC para selecioná-lo
+      </div>
+
+      <!-- IP options -->
+      <div class="ip-options" id="ip-pool">
+        <div class="ip-chip" onclick="assignIP('192.168.1.1')">192.168.1.1</div>
+        <div class="ip-chip" onclick="assignIP('192.168.1.2')">192.168.1.2</div>
+        <div class="ip-chip" onclick="assignIP('10.0.0.5')">10.0.0.5</div>
+        <div class="ip-chip" onclick="assignIP('172.16.0.1')">172.16.0.1</div>
+      </div>
+    </div>
+
+    <div class="fb" id="fb2"></div>
+
+    <div class="nav-row">
+      <button class="nav-back" onclick="goTo(1)">← Voltar</button>
+      <button class="nav-next" id="n2" onclick="goTo(3)" disabled>Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       S3 · MÁSCARA (escolha simples)
+  ══════════════════════════ -->
+  <div class="screen" id="s3">
+    <div class="guide-row">
+      <div class="guide-avatar">🤖</div>
+      <div class="guide-bubble">
+        <div class="tag">Passo 3 de 5</div>
+        Além do IP, cada computador precisa saber qual é a sua <b>"vizinhança"</b> — quais os computadores da mesma rede.<br><br>
+        Isso chama-se <span class="hl">máscara de sub-rede</span>. Para redes normais usa-se sempre o mesmo valor!
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(59,130,246,0.05); border-color:rgba(59,130,246,0.2)">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div style="font-size:32px;">🏘️</div>
+        <div>
+          <div style="font-size:13px;color:var(--muted);">Analogia</div>
+          <div style="font-size:14px;margin-top:2px;">O IP é a <b style="color:var(--bright)">morada</b>. A máscara é o <b style="color:var(--bright)">código postal</b> — define o bairro!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Qual é a máscara mais usada nas redes de casa/escola?</div>
+      <div class="choices" id="ch3">
+        <div class="choice" onclick="pick('ch3',this,false)">
+          <div class="choice-letter">A</div>
+          <span style="font-family:'JetBrains Mono',monospace">255.0.0.0</span>
+        </div>
+        <div class="choice" onclick="pick('ch3',this,false)">
+          <div class="choice-letter">B</div>
+          <span style="font-family:'JetBrains Mono',monospace">0.0.0.0</span>
+        </div>
+        <div class="choice" onclick="pick('ch3',this,true)">
+          <div class="choice-letter">C</div>
+          <span style="font-family:'JetBrains Mono',monospace">255.255.255.0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="fb" id="fb3"></div>
+
+    <div class="nav-row">
+      <button class="nav-back" onclick="goTo(2)">← Voltar</button>
+      <button class="nav-next" id="n3" onclick="goTo(4)" disabled>Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       S4 · PING
+  ══════════════════════════ -->
+  <div class="screen" id="s4">
+    <div class="guide-row">
+      <div class="guide-avatar">🤖</div>
+      <div class="guide-bubble">
+        <div class="tag">Passo 4 de 5</div>
+        Agora que os computadores têm IP, vamos testar se se conseguem <b>falar</b>!<br><br>
+        O comando <span class="hl">ping</span> é como ligar para alguém e ver se atende. Se responder — a rede funciona! 📞
+      </div>
+    </div>
+
+    <!-- animated network -->
+    <div class="card">
+      <div class="card-title">🖧 A tua rede</div>
+      <div class="diagram" style="padding:16px 8px">
+        <div class="dev">
+          <div class="dev-box done">💻</div>
+          <div class="dev-name">PC-A</div>
+          <div class="dev-ip">192.168.1.1</div>
+        </div>
+        <div class="wire" id="pw1" style="position:relative">
+          <div class="pkt" id="pk1" style="background:var(--green);box-shadow:0 0 8px var(--green)"></div>
+          <div class="pkt" id="pk2" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></div>
+        </div>
+        <div class="dev">
+          <div class="dev-box done">🔀</div>
+          <div class="dev-name">Switch</div>
+        </div>
+        <div class="wire" id="pw2" style="position:relative">
+          <div class="pkt" id="pk3" style="background:var(--green);box-shadow:0 0 8px var(--green)"></div>
+          <div class="pkt" id="pk4" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></div>
+        </div>
+        <div class="dev">
+          <div class="dev-box done">💻</div>
+          <div class="dev-name">PC-B</div>
+          <div class="dev-ip">192.168.1.2</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⌨️ Escreve o comando ping</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Para testar, o PC-A faz ping ao PC-B. Escreve o IP do PC-B:</p>
+      <div class="input-wrap">
+        <span class="input-prefix">C:\> ping</span>
+        <input class="input-field" id="ping-ip" placeholder="escreve o IP do PC-B..." oninput="clearFb('fb4')" onkeydown="if(event.key==='Enter')runPing()">
+      </div>
+      <div style="margin-top:10px">
+        <button class="action-btn" onclick="runPing()">▶ Executar ping</button>
+      </div>
+
+      <div class="ping-output" id="ping-out"></div>
+    </div>
+
+    <div class="hint-row" style="padding:0 2px">
+      <button class="hint-toggle" onclick="toggleHint('h4')">💡 Precisas de ajuda?</button>
+      <div class="hint-box" id="h4" style="margin-top:8px;display:none">O PC-B tem o IP: <b>192.168.1.2</b></div>
+    </div>
+
+    <div class="fb" id="fb4"></div>
+
+    <div class="nav-row">
+      <button class="nav-back" onclick="goTo(3)">← Voltar</button>
+      <button class="nav-next" id="n4" onclick="goTo(5)" disabled>Ver resultado 🏆</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       S5 · FINAL
+  ══════════════════════════ -->
+  <div class="screen" id="s5">
+    <div class="final-glow">
+      <span class="final-emoji">🌐</span>
+      <div class="final-title">Rede <span>ligada!</span></div>
+      <div class="final-sub">Aprendeste os fundamentos das redes de computadores</div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-item">
+        <div class="s-icon">🔌</div>
+        <div>
+          <div class="s-title">Rede local</div>
+          <div class="s-desc">Computadores ligados pelo Switch</div>
+        </div>
+      </div>
+      <div class="summary-item">
+        <div class="s-icon">📍</div>
+        <div>
+          <div class="s-title">Endereço IP</div>
+          <div class="s-desc">Morada única de cada PC</div>
+        </div>
+      </div>
+      <div class="summary-item">
+        <div class="s-icon">🏘️</div>
+        <div>
+          <div class="s-title">Máscara</div>
+          <div class="s-desc">Define a "vizinhança" da rede</div>
+        </div>
+      </div>
+      <div class="summary-item">
+        <div class="s-icon">📡</div>
+        <div>
+          <div class="s-title">Ping</div>
+          <div class="s-desc">Testa se dois PCs comunicam</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(16,185,129,0.06);border-color:rgba(16,185,129,0.2)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2">
+        <div style="color:var(--muted)">// Configuração da tua rede</div>
+        <div><span style="color:var(--muted)">PC-A:</span> <span style="color:var(--green)">192.168.1.1</span> <span style="color:var(--muted)">/ 255.255.255.0</span></div>
+        <div><span style="color:var(--muted)">PC-B:</span> <span style="color:var(--green)">192.168.1.2</span> <span style="color:var(--muted)">/ 255.255.255.0</span></div>
+        <div style="color:var(--green);margin-top:4px">✓ Ping com sucesso entre PC-A e PC-B</div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-back" onclick="goTo(0)">↩ Recomeçar</button>
+      <div style="font-size:13px;color:var(--muted)">Parabéns! 🎉</div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+let cur = 0;
+function goTo(n) {
+  document.getElementById('s'+cur).classList.remove('active');
+  cur = n;
+  document.getElementById('s'+cur).classList.add('active');
+  document.getElementById('prog').style.width = (n/5*100)+'%';
+  document.getElementById('pill-txt').textContent = Math.min(n,5)+' / 5';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function clearFb(id) {
+  const el = document.getElementById(id);
+  el.className = 'fb'; el.innerHTML = '';
+}
+function showFb(id, ok, msg) {
+  const el = document.getElementById(id);
+  el.className = 'fb show '+(ok?'ok':'bad');
+  el.innerHTML = `<div class="fb-icon">${ok?'✅':'❌'}</div><div>${msg}</div>`;
+}
+function toggleHint(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+/* Generic choice picker */
+function pick(groupId, el, ok) {
+  const all = document.querySelectorAll('#'+groupId+' .choice');
+  all.forEach(c => c.classList.add('dim'));
+  el.classList.remove('dim');
+
+  const fbId = 'fb'+groupId.replace('ch','');
+  const nextId = 'n'+groupId.replace('ch','');
+
+  if(ok) {
+    el.classList.add('ok');
+    if(groupId==='ch1') {
+      showFb(fbId, true, 'Exato! Uma rede conecta computadores para partilharem informação.');
+      document.getElementById('diag1').style.display='block';
+    }
+    if(groupId==='ch3') {
+      showFb(fbId, true, '255.255.255.0 é a máscara padrão para redes de casa e escola. Fácil de memorizar!');
+    }
+    document.getElementById(nextId).disabled = false;
+  } else {
+    el.classList.add('bad');
+    all.forEach(c => c.classList.remove('dim'));
+    el.classList.add('dim');
+    if(groupId==='ch1') showFb(fbId, false, 'Não é bem isso! Pensa em como os computadores da escola estão todos ligados...');
+    if(groupId==='ch3') {
+      if(el.textContent.includes('255.0.0.0')) showFb(fbId,false,'Essa máscara é para redes muito grandes. Para casa/escola usa 255.255.255.0');
+      else showFb(fbId,false,'Essa não é uma máscara válida! Tenta outra opção.');
+    }
+  }
+}
+
+/* S2 — click to assign IP */
+let selectedDev = null;
+const assigned = { a: null, b: null };
+const correctIP = { a: ['192.168.1.1','192.168.1.2'], b: ['192.168.1.1','192.168.1.2'] };
+
+function selectDev(dev) {
+  ['a','b'].forEach(d => {
+    document.getElementById('box-'+d).classList.remove('selected');
+  });
+  selectedDev = dev;
+  document.getElementById('box-'+dev).classList.add('selected');
+  document.getElementById('ip-select-hint').textContent = `PC-${dev.toUpperCase()} selecionado — agora escolhe um IP abaixo 👇`;
+}
+
+function assignIP(ip) {
+  if(!selectedDev) {
+    showFb('fb2', false, 'Primeiro clica num PC para o selecionar!');
+    return;
+  }
+  // check same network (192.168.1.x)
+  if(!ip.startsWith('192.168.1.')) {
+    showFb('fb2', false, `${ip} está noutra rede! Usa um IP que comece por 192.168.1.`);
+    // flash wrong
+    const box = document.getElementById('box-'+selectedDev);
+    box.style.borderColor='var(--red)';
+    setTimeout(()=>box.style.borderColor='',600);
+    return;
+  }
+  // check not already used by other
+  const other = selectedDev==='a'?'b':'a';
+  if(assigned[other]===ip) {
+    showFb('fb2', false, `${ip} já está a ser usado pelo outro PC! Cada computador precisa de um IP diferente.`);
+    return;
+  }
+
+  assigned[selectedDev] = ip;
+  document.getElementById('ip-'+selectedDev).textContent = ip;
+  document.getElementById('ip-'+selectedDev).style.color = 'var(--green)';
+  document.getElementById('box-'+selectedDev).classList.remove('selected');
+  document.getElementById('box-'+selectedDev).classList.add('done');
+
+  // mark chip used
+  document.querySelectorAll('.ip-chip').forEach(c=>{
+    if(c.textContent===ip) c.classList.add('used');
+  });
+
+  clearFb('fb2');
+  selectedDev = null;
+  document.getElementById('ip-select-hint').textContent = '👆 Clica no outro PC para lhe atribuir um IP';
+
+  if(assigned.a && assigned.b) {
+    // light up wires
+    document.getElementById('w1').classList.add('done');
+    document.getElementById('w2').classList.add('done');
+    showFb('fb2', true, `PC-A (${assigned.a}) e PC-B (${assigned.b}) estão na mesma rede. Perfeito!`);
+    document.getElementById('n2').disabled = false;
+  }
+}
+
+/* S4 — ping */
+let pingDone = false;
+function runPing() {
+  if(pingDone) return;
+  const val = document.getElementById('ping-ip').value.trim();
+  if(!val) { showFb('fb4',false,'Escreve o IP antes de executar!'); return; }
+
+  const out = document.getElementById('ping-out');
+  out.className = 'ping-output show';
+  out.innerHTML = '';
+
+  if(val==='192.168.1.2') {
+    pingDone = true;
+    animatePackets();
+    // wires light up
+    document.getElementById('pw1').classList.add('done');
+    document.getElementById('pw2').classList.add('done');
+
+    const replies = [
+      'Resposta de 192.168.1.2: tempo=1ms',
+      'Resposta de 192.168.1.2: tempo=1ms',
+      'Resposta de 192.168.1.2: tempo=2ms',
+      'Resposta de 192.168.1.2: tempo=1ms',
+    ];
+    replies.forEach((r,i)=>{
+      setTimeout(()=>{
+        out.innerHTML += `<div class="ping-ok">${r}</div>`;
+        if(i===replies.length-1){
+          setTimeout(()=>{
+            out.innerHTML += `<div class="ping-info" style="margin-top:6px">Enviados: 4 · Recebidos: 4 · Perdidos: 0 (0%)</div>`;
+            showFb('fb4',true,'Ping com sucesso! 🎉 Os dois computadores comunicam na rede.');
+            document.getElementById('n4').disabled=false;
+          },200);
+        }
+      },i*550+300);
+    });
+  } else {
+    // fail
+    for(let i=0;i<4;i++){
+      setTimeout(()=>{
+        out.innerHTML += `<div class="ping-fail">Pedido expirou.</div>`;
+        if(i===3){
+          if(val.startsWith('192.168.1.'))
+            showFb('fb4',false,`${val} não existe nesta rede. O PC-B tem o IP 192.168.1.2`);
+          else
+            showFb('fb4',false,`${val} está noutra rede! Só consegues fazer ping a computadores na mesma rede.`);
+          pingDone = false;
+        }
+      },i*400+200);
+    }
+  }
+}
+
+function animatePackets() {
+  const pairs = [['pk1','pk2'],['pk3','pk4']];
+  pairs.forEach(([fwd,bck],wi)=>{
+    const pf = document.getElementById(fwd);
+    const pb = document.getElementById(bck);
+    // forward
+    pf.style.display='block';
+    pf.style.animation='none'; pf.offsetHeight;
+    pf.style.animation=`mvR 0.9s ease ${wi*0.15}s forwards`;
+    // reply
+    setTimeout(()=>{
+      pb.style.display='block';
+      pb.style.animation='none'; pb.offsetHeight;
+      pb.style.animation=`mvL 0.9s ease ${wi*0.15}s forwards`;
+    },950);
+  });
+}
+
+document.head.insertAdjacentHTML('beforeend',`<style>
+@keyframes mvR{0%{left:0;opacity:1}100%{left:calc(100% - 10px);opacity:0}}
+@keyframes mvL{0%{left:calc(100% - 10px);opacity:1}100%{left:0;opacity:0}}
+</style>`);
+</script>
+</body>
+</html>
